@@ -92,6 +92,7 @@
 			<version>2.1</version>
 		</dependency>
 		
+		<!-- Get the missing Libs for SQLITE -->
 		<dependency>
 		  <groupId>com.almworks.sqlite4java</groupId>
 		  <artifactId>libsqlite4java-linux-i386</artifactId>
@@ -112,7 +113,10 @@
 		  <type>dylib</type>
 		  <version>${sqlite4java.version}</version>
 		</dependency>
+
+		<!-- Get the missing Libs for SQLITE -->
    
+
 	</dependencies>
 
 	<repositories>
@@ -124,7 +128,7 @@
 	</repositories>
 	
 	<build>
-	
+	<!-- Copy the missing libs -->
 	  <plugins>
 	    <plugin>
 	      <groupId>org.apache.maven.plugins</groupId>
@@ -172,7 +176,9 @@
           </execution>
         </executions>
       </plugin>
-      
+      <!-- Copy the missing libs -->
+
+      <!-- Change System property for test -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -183,7 +189,9 @@
           </systemPropertyVariables>
         </configuration>
       </plugin>
-      
+      <!-- Change System property for test -->
+
+      <!-- Change System property for run -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>properties-maven-plugin</artifactId>
@@ -204,7 +212,8 @@
           </execution>
         </executions>
       </plugin>
-  
+     <!-- Change System property for run --> 
+     
     </plugins>
   
   </build>
