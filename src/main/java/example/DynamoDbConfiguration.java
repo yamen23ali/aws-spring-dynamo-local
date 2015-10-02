@@ -3,9 +3,11 @@ package example;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.almworks.sqlite4java.SQLite;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
@@ -23,6 +25,7 @@ public class DynamoDbConfiguration
     public void init()
         throws Exception
     {
+    	
         Integer dynamoDbPort = 8000;
 
         final String[] localArgs = { "-inMemory", "-port", String.valueOf( dynamoDbPort ) };
@@ -32,7 +35,8 @@ public class DynamoDbConfiguration
         BasicAWSCredentials credentials = new BasicAWSCredentials( "dontCare", "dontCare" );
         dynamodb = new AmazonDynamoDBClient( credentials );
         dynamodb.setEndpoint( "http://localhost:" + String.valueOf( dynamoDbPort ) );
-        dynamodb.listTables();
+        
+        System.out.println( dynamodb.listTables() );
     }
 
     @Bean

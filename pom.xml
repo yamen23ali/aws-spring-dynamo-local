@@ -21,6 +21,8 @@
 		<mainClass>example.Application</mainClass>
 		<java.version>1.8</java.version>
 		<maven.compiler.version>3.3</maven.compiler.version>
+		<sqlite4java.version>1.0.392</sqlite4java.version>
+		<extralibs.dir>${basedir}/extraLibs</extralibs.dir>
 	</properties>
 
 	<dependencies>
@@ -89,6 +91,28 @@
 			<artifactId>log4j-1.2-api</artifactId>
 			<version>2.1</version>
 		</dependency>
+		
+		<dependency>
+		  <groupId>com.almworks.sqlite4java</groupId>
+		  <artifactId>libsqlite4java-linux-i386</artifactId>
+		  <type>so</type>
+		  <version>${sqlite4java.version}</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>com.almworks.sqlite4java</groupId>
+		  <artifactId>libsqlite4java-linux-amd64</artifactId>
+		  <type>so</type>
+		  <version>${sqlite4java.version}</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>com.almworks.sqlite4java</groupId>
+		  <artifactId>libsqlite4java-osx</artifactId>
+		  <type>dylib</type>
+		  <version>${sqlite4java.version}</version>
+		</dependency>
+   
 	</dependencies>
 
 	<repositories>
@@ -98,4 +122,91 @@
 			<url>http://dynamodb-local.s3-website-us-west-2.amazonaws.com/release</url>
 		</repository>
 	</repositories>
+	
+	<build>
+	
+	  <plugins>
+	    <plugin>
+	      <groupId>org.apache.maven.plugins</groupId>
+	      <artifactId>maven-dependency-plugin</artifactId>
+	      <executions>
+	        <execution>
+	          <id>copy</id>
+	          <phase>compile</phase>
+	          <goals>
+	            <goal>copy</goal>
+	          </goals>
+	          <configuration>
+	            <artifactItems>
+	              
+	              <artifactItem>
+	                <groupId>com.almworks.sqlite4java</groupId>
+	                <artifactId>libsqlite4java-linux-i386</artifactId>
+	                <version>${sqlite4java.version}</version>
+	                <type>so</type>
+	                <overWrite>true</overWrite>
+	                <outputDirectory>${extralibs.dir}</outputDirectory>
+	              </artifactItem>
+	              
+	              <artifactItem>
+	                <groupId>com.almworks.sqlite4java</groupId>
+	                <artifactId>libsqlite4java-linux-amd64</artifactId>
+	                <version>${sqlite4java.version}</version>
+	                <type>so</type>
+	                <overWrite>true</overWrite>
+	                <outputDirectory>${extralibs.dir}</outputDirectory>
+	              </artifactItem>
+                  
+                  <artifactItem>
+                    <groupId>com.almworks.sqlite4java</groupId>
+                    <artifactId>libsqlite4java-osx</artifactId>
+                    <version>${sqlite4java.version}</version>
+                    <type>dylib</type>
+                    <overWrite>true</overWrite>
+                    <outputDirectory>${extralibs.dir}</outputDirectory>
+                  </artifactItem>
+                  
+                </artifactItems>
+                
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.18.1</version>
+        <configuration>
+          <systemPropertyVariables>
+            <sqlite4java.library.path>${extralibs.dir}</sqlite4java.library.path>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <version>1.0-alpha-2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>set-system-properties</goal>
+            </goals>
+            <configuration>
+              <properties>
+                <property>
+                  <name>sqlite4java.library.path</name>
+                  <value>${extralibs.dir}</value>
+                </property>
+              </properties>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+  
+    </plugins>
+  
+  </build>
+      
 </project>
